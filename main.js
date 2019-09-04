@@ -1,9 +1,11 @@
-let fakeDataBase=[
+let fakeDataBase;
 
-    {id:1, task: "Gå och handla", ready:false},
-    {id:2, task: "Gå och sporta", ready:false},
-    {id:3, task: "Gå och hålla någon i handen", ready:false}
-];
+if(localStorage.getItem("todo2019")){
+    fakeDataBase=JSON.parse(localStorage.getItem("todo2019"));
+}
+else{
+    fakeDataBase=[];
+}
 let order=true;
 
 _id("orderButton").addEventListener("click", changeOrder);
@@ -53,8 +55,12 @@ if(inputText.trim() !="")
 let taskObject={id:Date.now(), task:inputText, ready:false}
 //spara i fakedatabas
 fakeDataBase.push(taskObject);
+
 //rendera på nytt
-renderFakeData(); }
+renderFakeData(); 
+//spara lokalt
+saveLocal();
+}
 document.getElementById("taskId").value="";
 document.getElementById("taskId").focus();
 }
@@ -62,11 +68,13 @@ document.getElementById("taskId").focus();
 function deleteTask(index){
     fakeDataBase.splice(index,1);
     renderFakeData();
+    saveLocal();
 }
 
 function doneTask(index){
     fakeDataBase[index].ready=!fakeDataBase[index].ready;
     renderFakeData();
+    saveLocal();
 
 }
 
@@ -75,3 +83,7 @@ function doneTask(index){
 function _id(id){
     return document.getElementById(id);
 }
+
+function saveLocal(){
+    localStorage.setItem("todo2019",JSON.stringify(fakeDataBase))
+};
